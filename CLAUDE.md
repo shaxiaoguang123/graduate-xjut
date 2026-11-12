@@ -9,8 +9,8 @@
 
 ## 当前状态
 
-- 已有：`docs/`、`papers/tfg-mamba/`（README、notes）、`requirements.txt`、`configs/splits/xjtu_sy_loo13.yaml`、`tests/`，以及 `rul/` 的 `data`、`features`、`fpt`、`splits`、`cli`（子命令 `features`、`fpt`）。
-- 待建：`rul/` 的数据集、模型、训练部分，`papers/tfg-mamba/configs/`、`papers/tfg-mamba/results.md`。
+- 已有：`docs/`、`papers/tfg-mamba/`（README、notes、configs、results）、`requirements.txt`、`configs/splits/`、`tests/`，以及 `rul/`（data、features、fpt、splits、dataset、models/tfg_mamba、train、metrics、report、plots、cli）。
+- CLI 子命令：`features`、`fpt`、`train`、`select`、`report`、`plot`。
 - 特征缓存：`conda run --no-capture-output -n pt python -m rul.cli features --workers 8`（写到 `artifacts/features/`，约 1 分钟）。
 - 新建或删除目录后，同步更新本节。
 
@@ -18,15 +18,15 @@
 
 ```
 paper/
-├── rul/                  # （待建）共享代码：data、fpt、features、splits、metrics、train、cli、models/
+├── rul/                  # 共享代码：data、fpt、features、splits、metrics、train、cli、models/
 ├── papers/<论文简称>/     # 每篇论文一个文件夹，小写加连字符
 │   ├── README.md         # 论文信息、复现目标、完成标准、状态
 │   ├── notes.md          # 论文没写清楚的地方、我们的取舍、与论文的差异
 │   ├── configs/          # 本论文的实验配置（如 paper.yaml、strict.yaml）
 │   └── results.md        # 结论性结果
-├── configs/splits/       # （待建）轴承划分清单，所有论文共用
+├── configs/splits/       # 轴承划分清单，所有论文共用
 ├── docs/                 # setup.md 环境；protocol.md 统一评估协议
-├── tests/                # （待建）unittest，test_<area>.py
+├── tests/                # unittest，test_<area>.py
 ├── references/           # 论文 PDF（版权材料，不进 Git）
 ├── date/                 # 只读数据集（不进 Git）
 ├── artifacts/            # 特征缓存等（不进 Git）

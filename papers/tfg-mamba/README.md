@@ -90,12 +90,12 @@
 | 4 | 滑窗样本、只在训练轴承上拟合的 min-max | `tests/test_dataset.py`（补零、mask、因果、缩放隔离） | 完成 |
 | 5 | TFG-Mamba 模型（纯 PyTorch Mamba，式 (19) 精确 ZOH） | `tests/test_model.py`（扫描等价、ZOH 公式、因果性、参数量、MPS） | 完成，参数量 115,973 |
 | 6 | 训练、早停、运行记录、汇总表 | `tests/test_train.py`、`tests/test_report.py`；真实数据 MPS 冒烟测试 | 完成 |
-| 7 | 窗口长度 L ∈ {10, 20, 30}：只看验证集（种子 0，`--no-test`），每个协议分别选 | `python -m rul.cli select` | 进行中 |
-| 8 | 用选定的 L，两种协议各跑 13 折 × 3 个种子，报告测试集结果 | `python -m rul.cli report`，写入 `results.md` | 待做 |
-| 9 | 对比论文，分析差距，记录到 `notes.md` 第 4 节；打 tag | — | 待做 |
+| 7 | 窗口长度 L ∈ {10, 20, 30}：只看验证集（种子 0，`--no-test`），每个协议分别选 | `python -m rul.cli select` | 完成：paper L=30，strict L=20 |
+| 8 | 用选定的 L，两种协议各跑 13 折 × 3 个种子，报告测试集结果 | `python -m rul.cli report`，写入 `results.md` | 完成：paper RMSE 0.231，strict 0.244 |
+| 9 | 对比论文，分析差距，记录到 `notes.md` 第 4 节；打 tag | — | 差距已记录；未达完成标准，未打 tag |
 
 ## 本目录
 
 - `notes.md`：论文不明确之处、我们的取舍、FPT 对比、与论文的差异。
 - `configs/paper.yaml`、`configs/strict.yaml`：两种协议的实验配置。
-- `results.md`（待建）：结论性结果。
+- `results.md`：结论性结果。
