@@ -3,20 +3,22 @@
 __pycache__/
 *.pyc
 .DS_Store
-
-# Raw XJTU-SY data and generated feature cache
-/date/
-/artifacts/features/
-
-# Generated experiment outputs and model weights
-/runs/
-*.pt
-*.pth
-*.npz
-/artifacts/version_backups/
-
+.ipynb_checkpoints/
 .tools/
 .pytest_cache/
 
-# Reference PDFs (copyrighted, local only)
+# Raw XJTU-SY data (read-only, never committed)
+/date/
+
+# Generated outputs: feature caches, run directories, model weights
+/artifacts/
+/runs/
+*.pt
+*.pth
+*.ckpt
+*.npz
+
+# Copyrighted material and scratch files (local only; this repo is public)
 /references/
+*.pdf
+/tmp/

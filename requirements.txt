@@ -1,0 +1,12 @@
+# Shared Python dependencies for Mac (pt, Python 3.12) and Windows (pt, Python 3.11).
+# torch is installed separately on each machine and is intentionally NOT listed here:
+# pip could replace the Windows CUDA build with a CPU-only wheel. See docs/setup.md.
+#
+# Lower bounds are the oldest versions currently installed on either machine (2026-11-12).
+# pandas differs by a major version (Mac 2.3.x, Windows 3.1.x); code must work with both.
+numpy>=2.1
+scipy>=1.17
+pandas>=2.3
+PyYAML>=6.0
+matplotlib>=3.11
+tqdm>=4.70
