@@ -17,7 +17,7 @@ fpt:
   n_sigma: 3.0
   n_consecutive: 5
 window:
-  length: 20                     # not in paper; chosen on validation (notes A3)
+  length: 20                     # not in paper; chosen on validation from {10,20,30} (notes A3)
 model:
   tcn_channels: [32, 64]         # Table 5
   kernel_size: 5                 # Table 5
