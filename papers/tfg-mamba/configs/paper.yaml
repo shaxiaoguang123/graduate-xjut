@@ -1,0 +1,36 @@
+# TFG-Mamba, `paper` protocol: settings as close to the paper as possible.
+# Sources: Table 1 (FPT), Table 5 (XJTU-SY column), Table 11, Figs. 1-3.
+# Items the paper leaves open are marked "not in paper" and explained in notes.md.
+paper: tfg-mamba
+experiment: paper_L20
+protocol: paper
+protocol_version: v1
+data:
+  cache_dir: artifacts/features
+  channel: horizontal            # Section 3.1.1
+  feature_formula: printed       # Tables 3-4 as printed (notes A16)
+  split: configs/splits/xjtu_sy_loo13.yaml
+fpt:
+  method: paper_table            # Table 1 (notes A11)
+window:
+  length: 20                     # not in paper; chosen on validation (notes A3)
+model:
+  tcn_channels: [32, 64]         # Table 5
+  kernel_size: 5                 # Table 5
+  hidden: 32                     # Table 5
+  n_layers: 6                    # Table 5 (Mamba layers)
+  dropout: 0.2                   # Table 5
+  se_reduction: 16               # not in paper (SENet default)
+  d_state: 16                    # not in paper (Mamba default)
+  d_conv: 4                      # not in paper (Mamba default)
+  expand: 2                      # not in paper (Mamba default)
+train:
+  batch_size: 8                  # Table 5
+  lr: 0.002                      # Table 5
+  optimizer: adam                # not in paper
+  loss: mse                      # not in paper
+  max_epochs: 200                # not in paper
+  patience: 20                   # not in paper (early stopping is used, Section 4.1)
+  compile: true                  # torch.compile; speed only
+  torch_threads: 2
+seeds: [0, 1, 2]

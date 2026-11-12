@@ -42,6 +42,24 @@ def _cmd_fpt(args: argparse.Namespace) -> None:
         )
 
 
+def _cmd_train(args: argparse.Namespace) -> None:
+    from rul import train
+
+    overrides = list(args.set or [])
+    if args.experiment:
+        overrides.append(f"experiment={args.experiment}")
+    cfg = train.load_config(args.config, overrides)
+    train.run_experiment(
+        cfg,
+        device=args.device,
+        folds=args.folds,
+        seeds=args.seeds,
+        workers=args.workers,
+        evaluate_test=not args.no_test,
+        out_root=args.out_root,
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rul.cli")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -62,6 +80,18 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--n-sigma", type=float, default=3.0)
     p.add_argument("--n-consecutive", type=int, default=5)
     p.set_defaults(func=_cmd_fpt)
+
+    p = sub.add_parser("train", help="train and evaluate every (fold, seed) of an experiment config")
+    p.add_argument("--config", required=True)
+    p.add_argument("--device", required=True, choices=["mps", "cuda", "cpu"])
+    p.add_argument("--folds", nargs="*", help="test bearings to run (default: all folds)")
+    p.add_argument("--seeds", nargs="*", type=int, help="default: seeds from the config")
+    p.add_argument("--workers", type=int, default=1, help="parallel worker processes")
+    p.add_argument("--no-test", action="store_true", help="validation only; never compute test metrics")
+    p.add_argument("--set", nargs="*", help="config overrides such as window.length=10")
+    p.add_argument("--experiment", help="override the experiment name")
+    p.add_argument("--out-root", default="runs")
+    p.set_defaults(func=_cmd_train)
     return parser
 
 
