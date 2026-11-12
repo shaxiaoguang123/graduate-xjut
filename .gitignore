@@ -17,3 +17,6 @@ __pycache__/
 
 .tools/
 .pytest_cache/
+
+# Reference PDFs (copyrighted, local only)
+/references/
