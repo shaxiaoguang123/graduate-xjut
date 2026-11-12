@@ -1,0 +1,21 @@
+# 13-fold leave-one-bearing-out split (docs/protocol.md section 3, protocol v1).
+# Each fold: one test bearing, one validation bearing (the next bearing of the
+# same operating condition among the 13 evaluation bearings, wrapping around),
+# and the remaining 11 bearings for training. Chosen by rule, not by metrics.
+name: xjtu_sy_loo13
+protocol_version: v1
+excluded: ["1_4", "3_2"]
+folds:
+  - {test: "1_1", val: "1_2"}
+  - {test: "1_2", val: "1_3"}
+  - {test: "1_3", val: "1_5"}
+  - {test: "1_5", val: "1_1"}
+  - {test: "2_1", val: "2_2"}
+  - {test: "2_2", val: "2_3"}
+  - {test: "2_3", val: "2_4"}
+  - {test: "2_4", val: "2_5"}
+  - {test: "2_5", val: "2_1"}
+  - {test: "3_1", val: "3_3"}
+  - {test: "3_3", val: "3_4"}
+  - {test: "3_4", val: "3_5"}
+  - {test: "3_5", val: "3_1"}

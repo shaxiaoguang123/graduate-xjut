@@ -9,8 +9,9 @@
 
 ## 当前状态
 
-- 已有：`CLAUDE.md`、`docs/setup.md`、`docs/protocol.md`、`papers/tfg-mamba/README.md`、`papers/tfg-mamba/notes.md`、`requirements.txt`。
-- 待建：`rul/`、`tests/`、`configs/splits/`、`papers/tfg-mamba/configs/`、`papers/tfg-mamba/results.md`。`rul/` 建好之前，下文提到的 `rul.cli` 命令都不能运行。
+- 已有：`docs/`、`papers/tfg-mamba/`（README、notes）、`requirements.txt`、`configs/splits/xjtu_sy_loo13.yaml`、`tests/`，以及 `rul/` 的 `data`、`features`、`fpt`、`splits`、`cli`（子命令 `features`、`fpt`）。
+- 待建：`rul/` 的数据集、模型、训练部分，`papers/tfg-mamba/configs/`、`papers/tfg-mamba/results.md`。
+- 特征缓存：`conda run --no-capture-output -n pt python -m rul.cli features --workers 8`（写到 `artifacts/features/`，约 1 分钟）。
 - 新建或删除目录后，同步更新本节。
 
 ## 目录结构
