@@ -103,16 +103,27 @@ def prepare_fold(cfg: dict[str, Any], fold: splits.Fold) -> FoldData:
     for bearing in bearings:
         feats = features.load_features(bearing, data_cfg["feature_formula"], data_cfg["cache_dir"], data_cfg["channel"])
         series[bearing] = dataset.degradation_data(bearing, feats, fpt_cfg)
-    # Scaling parameters come from the training bearings only.
+    normalization = data_cfg.get("normalization", "train_minmax")
+    # Default: scaling parameters come from the training bearings only.
     scaler = dataset.MinMaxScaler().fit([series[b].features for b in fold.train])
-    train_sets = [dataset.windowed(series[b], scaler, length) for b in fold.train]
+    if normalization == "train_minmax":
+        scalers = {b: scaler for b in bearings}
+    elif normalization == "per_bearing_minmax":
+        # paper-protocol variant only: each bearing scaled by its own whole degradation
+        # segment, which uses future information (notes.md A8).
+        if cfg["protocol"] != "paper":
+            raise ValueError("per_bearing_minmax uses future data and is only allowed under protocol: paper")
+        scalers = {b: dataset.MinMaxScaler().fit([series[b].features]) for b in bearings}
+    else:
+        raise ValueError(f"unknown normalization {normalization!r}")
+    train_sets = [dataset.windowed(series[b], scalers[b], length) for b in fold.train]
     return FoldData(
         fold=fold,
         train_x=np.concatenate([s.windows for s in train_sets]),
         train_mask=np.concatenate([s.mask for s in train_sets]),
         train_y=np.concatenate([s.labels for s in train_sets]),
-        val=dataset.windowed(series[fold.val], scaler, length),
-        test=dataset.windowed(series[fold.test], scaler, length),
+        val=dataset.windowed(series[fold.val], scalers[fold.val], length),
+        test=dataset.windowed(series[fold.test], scalers[fold.test], length),
         scaler_state=scaler.state(),
         fpt={b: {"fpt": s.fpt, "triggered": s.fpt_triggered, "n_samples": int(s.labels.size)} for b, s in series.items()},
     )

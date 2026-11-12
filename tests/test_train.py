@@ -60,6 +60,18 @@ class PipelineTest(unittest.TestCase):
             np.testing.assert_allclose(data.scaler_state["min"], np.concatenate(train_feats).min(axis=0))
             self.assertNotIn(fold.test, fold.train)
 
+    def test_per_bearing_normalization_only_under_paper(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(features, "load_features", _fake_load_features):
+            cfg = _config(Path(tmp))
+            cfg["data"]["normalization"] = "per_bearing_minmax"
+            fold = train.splits.load_split(cfg["data"]["split"]).fold("1_1")
+            with self.assertRaises(ValueError):
+                train.prepare_fold(cfg, fold)
+            cfg["protocol"] = "paper"
+            data = train.prepare_fold(cfg, fold)
+            self.assertAlmostEqual(float(data.test.windows[:, -1].min()), 0.0, places=5)
+            self.assertAlmostEqual(float(data.test.windows[:, -1].max()), 1.0, places=5)
+
     def test_run_writes_records_and_respects_no_test(self) -> None:
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(features, "load_features", _fake_load_features):
             cfg = _config(Path(tmp))
