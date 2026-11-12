@@ -72,6 +72,12 @@ def _cmd_report(args: argparse.Namespace) -> None:
     print(report.test_table(args.run_dir, compare_paper=not args.no_paper))
 
 
+def _cmd_plot(args: argparse.Namespace) -> None:
+    from rul import plots
+
+    print(plots.plot_predictions(args.run_dir, split=args.split, out=args.out))
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rul.cli")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -113,6 +119,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("run_dir")
     p.add_argument("--no-paper", action="store_true", help="do not add the paper's Table 7 columns")
     p.set_defaults(func=_cmd_report)
+
+    p = sub.add_parser("plot", help="plot true vs. predicted RUL curves of a run")
+    p.add_argument("run_dir")
+    p.add_argument("--split", default="test", choices=["test", "val"])
+    p.add_argument("--out")
+    p.set_defaults(func=_cmd_plot)
     return parser
 
 
