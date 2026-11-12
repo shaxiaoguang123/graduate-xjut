@@ -79,20 +79,23 @@
 - `strict` 协议：13 折 × 3 个种子跑完并报告均值 ± 标准差。不设数值门槛，它是基线，不是复现目标。
 - 结果写进 `results.md`，打 tag `paper-tfg-mamba-v1`。
 
-## 复现状态
+## 复现计划与状态
 
-- [x] 阅读论文，整理网络结构与超参数（上表和 `notes.md`）
-- [ ] 确定 `notes.md` 中"待定"项的做法
-- [ ] `rul/`：数据读取、FPT、26 个统计特征，加测试
-- [ ] 划分清单 `configs/splits/xjtu_sy_loo13.yaml`，加划分隔离测试
-- [ ] 模型 `rul/models/tfg_mamba.py`（纯 PyTorch Mamba），加因果性和设备测试
-- [ ] 训练与评估流程，运行记录符合 `docs/protocol.md` 第 9 节
-- [ ] `paper` 协议：13 折结果，与上表对比
-- [ ] `strict` 协议：13 折 × 3 个种子
-- [ ] 写 `results.md`，打 tag
+| 阶段 | 内容 | 验证方式 | 状态 |
+|---|---|---|---|
+| 0 | 精读论文 2–4 节、图 1–3、Table 1/3/4/5/11，整理不明确之处 | `notes.md` A1–A25 | 完成 |
+| 1 | 数据读取、26 个统计特征（照印出公式）、特征缓存 | `tests/test_data.py`、`tests/test_features.py`（逐条对公式） | 完成 |
+| 2 | FPT（3σ 规则 + Table 1）、RUL 标签 | `tests/test_fpt.py`（含因果性）；与 Table 1 对比（`notes.md` 第 3 节） | 完成 |
+| 3 | 13 折划分清单 | `tests/test_splits.py`（互不重叠、每个轴承恰好测一次） | 完成 |
+| 4 | 滑窗样本、只在训练轴承上拟合的 min-max | `tests/test_dataset.py`（补零、mask、因果、缩放隔离） | 完成 |
+| 5 | TFG-Mamba 模型（纯 PyTorch Mamba，式 (19) 精确 ZOH） | `tests/test_model.py`（扫描等价、ZOH 公式、因果性、参数量、MPS） | 完成，参数量 115,973 |
+| 6 | 训练、早停、运行记录、汇总表 | `tests/test_train.py`、`tests/test_report.py`；真实数据 MPS 冒烟测试 | 完成 |
+| 7 | 窗口长度 L ∈ {10, 20, 30}：只看验证集（种子 0，`--no-test`），每个协议分别选 | `python -m rul.cli select` | 进行中 |
+| 8 | 用选定的 L，两种协议各跑 13 折 × 3 个种子，报告测试集结果 | `python -m rul.cli report`，写入 `results.md` | 待做 |
+| 9 | 对比论文，分析差距，记录到 `notes.md` 第 4 节；打 tag | — | 待做 |
 
 ## 本目录
 
-- `notes.md`：论文不明确之处、我们的取舍、与论文的差异。
-- `configs/`（待建）：`paper.yaml`、`strict.yaml`。
+- `notes.md`：论文不明确之处、我们的取舍、FPT 对比、与论文的差异。
+- `configs/paper.yaml`、`configs/strict.yaml`：两种协议的实验配置。
 - `results.md`（待建）：结论性结果。
