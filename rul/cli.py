@@ -60,6 +60,18 @@ def _cmd_train(args: argparse.Namespace) -> None:
     )
 
 
+def _cmd_select(args: argparse.Namespace) -> None:
+    from rul import report
+
+    print(report.selection_table(args.run_dirs))
+
+
+def _cmd_report(args: argparse.Namespace) -> None:
+    from rul import report
+
+    print(report.test_table(args.run_dir, compare_paper=not args.no_paper))
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="python -m rul.cli")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -92,6 +104,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--experiment", help="override the experiment name")
     p.add_argument("--out-root", default="runs")
     p.set_defaults(func=_cmd_train)
+
+    p = sub.add_parser("select", help="compare validation metrics of several runs")
+    p.add_argument("run_dirs", nargs="+")
+    p.set_defaults(func=_cmd_select)
+
+    p = sub.add_parser("report", help="per-bearing test metrics of a run vs. the paper")
+    p.add_argument("run_dir")
+    p.add_argument("--no-paper", action="store_true", help="do not add the paper's Table 7 columns")
+    p.set_defaults(func=_cmd_report)
     return parser
 
 
